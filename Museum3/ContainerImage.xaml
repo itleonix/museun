@@ -1,0 +1,98 @@
+﻿<UserControl x:Class="Museum3.ContainerImage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Museum3"
+             mc:Ignorable="d" Height="360" Width="340">
+    <UserControl.Resources>
+        <FontFamily x:Key="CintGost63">pack://application:,,,/Fonts/#Cint_Gost63</FontFamily>
+        <local:CenterConverter x:Key="CenterConverter"/>
+    </UserControl.Resources>
+    <Canvas Margin="0,0,32,53">
+        <!--Фотография-->
+        <Canvas Panel.ZIndex="1">
+            <Image x:Name="ContainerFoto" Stretch="UniformToFill"
+                   Width="190" Height="145"
+                   Canvas.Left="72" Canvas.Top="110"/>
+        </Canvas>
+
+        <!--Блок описания-->
+        <Canvas Name="CanvasDesc" Panel.ZIndex="1" Width="210" Height="0"
+                Canvas.Left="64" Canvas.Top="90">
+            <Canvas.Background>
+                <ImageBrush ImageSource="pack://application:,,,/Sprites/fonDesc.png" />
+            </Canvas.Background>
+            <TextBox Name="TextBlockDesc" Width="210" Height="0"
+                           Text="PostgreSQL — мощная, бесплатная СУБД с поддержкой ACID, JSON, репликации и расширяемости."
+                           TextWrapping="Wrap"
+                           FontFamily="{StaticResource CintGost63}"
+                           Foreground="White"
+                           Padding="18, 13"
+                           BorderThickness="0"
+                           IsReadOnly="True"
+                           Background="Transparent"/>
+        </Canvas>
+
+        <!--Трак-->
+        <Canvas Panel.ZIndex="0">
+            <Image x:Name="Chain" Source="pack://application:,,,/Sprites/chain.png" Stretch="UniformToFill"
+           Width="272" Height="19"
+           Canvas.Left="11" Canvas.Top="299" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        </Canvas>
+
+        <!--Фоновая картинка-->
+        <Image x:Name="Container" Source="pack://application:,,,/Sprites/cartridge.png" Stretch="Fill" 
+               Width="340"
+               Height="370"/>
+
+        <!--Кнопка открыть-->
+        <Canvas Panel.ZIndex="1">
+            <Image x:Name="ButtonOpen" Source="pack://application:,,,/Sprites/button_open2.png" Stretch="Uniform"
+                   Width="214"
+                   Canvas.Top="27" Canvas.Left="65" Height="48" HorizontalAlignment="Left" VerticalAlignment="Top"
+                   MouseDown="ButtonOpen_Click"/>
+        </Canvas>
+
+        <!--Рамка под фото-->
+        <Canvas Panel.ZIndex="1">
+            <Image x:Name="Frame" Source="pack://application:,,,/Sprites/frame.png" Stretch="Uniform"
+                   Width="214"
+                   Canvas.Top="100" Canvas.Left="60" Height="170" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        </Canvas>
+
+        <!--Название категории-->
+        <Canvas Panel.ZIndex="1">
+            <Image x:Name="Category" Source="pack://application:,,,/Sprites/Category.png" Stretch="Uniform"
+           Width="259"
+           Canvas.Top="239" Canvas.Left="38" HorizontalAlignment="Left" Height="44" VerticalAlignment="Center"/>
+        </Canvas>
+
+        <!--Название категории-->
+        <Canvas Name="CanvasNameCat" Panel.ZIndex="2" Width="270" Height="33" Canvas.Left="35" Canvas.Top="251">
+            <Label x:Name="CategoryLabel" Content="Название категории"
+                   FontFamily="{StaticResource CintGost63}"
+                   Foreground="White"
+                   FontWeight="Bold"
+                   HorizontalContentAlignment="Center"
+                   Canvas.Top="0"
+                   SizeChanged="CategotyLabel_SizeChanged" Height="26" Width="260" Canvas.Left="0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        </Canvas>
+
+        <!--Кнопка описание-->
+        <Canvas Panel.ZIndex="1">
+            <Image x:Name="ButtonDesc" Source="pack://application:,,,/Sprites/button1.png"
+                   Stretch="Uniform" Width="143" Height="25"
+                   Canvas.Left="68" Canvas.Top="298" HorizontalAlignment="Left" VerticalAlignment="Center"
+                   MouseLeftButtonDown="ButtonDesc_Click"
+                   PreviewMouseDown="ButtonDesc_MouseDown"
+                   PreviewMouseUp="ButtonDesc_MouseUp"/>
+            <Image x:Name="ButtonDescLight" Source="pack://application:,,,/Sprites/button_description_light.png" 
+                   Stretch="Uniform"
+                   Canvas.Left="79.5"
+                   Canvas.Top="307.5"
+                   Width="7"
+                   Opacity="0"/>
+        </Canvas>
+    </Canvas>
+</UserControl>

@@ -1,0 +1,313 @@
+﻿<Window x:Class="Museum3.GalleryWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Museum3"
+        mc:Ignorable="d"
+        Title="GalleryWindow" Height="1080" Width="1920" WindowStartupLocation="CenterScreen"
+        WindowState="Maximized"
+        WindowStyle="None"
+        Background="Black"
+        AllowsTransparency="False">
+    <Window.Resources>
+        <FontFamily x:Key="CintGost63">pack://application:,,,/Fonts/#Cint_Gost63</FontFamily>
+        <local:CenterConverter x:Key="CenterConverter"/>
+        <Style x:Key="ZoomSliderStyle" TargetType="Slider">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Slider">
+                        <Grid Height="48" Margin="0">
+
+                            <!-- Фон трека — ПЕРВЫМ, чтобы был "под" ползунком -->
+                            <Border x:Name="TrackBackground"
+                            Background="#77CCCCCC"
+                            Height="14"
+                            VerticalAlignment="Center"
+                            CornerRadius="2"
+                            Margin="16,0"
+                            IsHitTestVisible="True"
+                            MouseLeftButtonDown="TrackBackground_MouseLeftButtonDown"/>
+
+                            <!-- Основной трек и ползунок -->
+                            <Track x:Name="PART_Track"
+                           VerticalAlignment="Center"
+                           Margin="16,0"
+                           Height="20"
+                           >
+                                <!-- Левая часть (неактивная) -->
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton Style="{x:Null}"
+                                          IsHitTestVisible="False"
+                                          Opacity="0"/>
+                                </Track.DecreaseRepeatButton>
+
+                                <!-- Ползунок -->
+                                <Track.Thumb>
+                                    <Thumb Width="44" Height="24" VerticalAlignment="Center">
+                                        <Thumb.Template>
+                                            <ControlTemplate TargetType="Thumb">
+                                                <Border Width="44" Height="24"
+                                                Background="#CCDDDDDD"
+                                                BorderBrush="#AAAAAA"
+                                                BorderThickness="1"
+                                                CornerRadius="12"/>
+                                            </ControlTemplate>
+                                        </Thumb.Template>
+                                    </Thumb>
+                                </Track.Thumb>
+
+                                <!-- Правая часть (неактивная) -->
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton Style="{x:Null}"
+                                          IsHitTestVisible="False"
+                                          Opacity="0"/>
+                                </Track.IncreaseRepeatButton>
+                            </Track>
+
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+    </Window.Resources>
+    <Grid x:Name="MainGrid" Background="Black">
+        <Rectangle Fill="Black" Panel.ZIndex="0"/>
+        <Canvas x:Name="FullZIndex" Background="Black">
+            <MediaElement Name="GearsIdle"
+                          LoadedBehavior="Manual"
+                          UnloadedBehavior="Stop"
+                          Stretch="Uniform"
+                          ScrubbingEnabled="True"
+                          MediaEnded="GearsIdle_MediaEnded"
+                          Width="1920" Height="1080"/>
+            <Canvas x:Name="BlackBackFull" Width="970" Height="735" Canvas.Left="440" Canvas.Top="120"
+                    Background="Black"/>
+            <Image x:Name="ImageDisplay" Stretch="Uniform"  Opacity="0"
+                    Width="970" Height="735"
+                    Canvas.Left="440" Canvas.Top="120"/>
+            <Image x:Name="StartImageDisplay" Stretch="UniformToFill"  Opacity="1"
+                    Source="pack://application:,,,/Sprites/fonDesc.png"
+                    Width="970" Height="735"
+                    Canvas.Left="440" Canvas.Top="120"/>
+        </Canvas>
+        <Image Stretch="Uniform" 
+               Source="pack://application:,,,/Sprites/shadow.png"
+               Width="1920"
+               Margin="0, 0, 0, 0"
+               Panel.ZIndex="10"
+               IsHitTestVisible="False"/>
+        <Image Stretch="Uniform" VerticalAlignment="Center" HorizontalAlignment="Left"
+               Source="pack://application:,,,/Sprites/ViewerMain.png"
+               Width="1550"
+               Margin="70, 0, 0, 0"
+               Panel.ZIndex="6"
+               IsHitTestVisible="False"/>
+        <Image Stretch="Uniform" HorizontalAlignment="Center"
+               Source="pack://application:,,,/Sprites/ViewerPart3.png"
+               Width="1100"
+               Margin="20, 910, 0, 0"
+               Panel.ZIndex="6"
+               IsHitTestVisible="False"/>
+        <Canvas>
+            <MediaElement x:Name="ButtonNext"
+                  LoadedBehavior="Manual"
+                  Stretch="Uniform"
+                  Width="89"
+                  Canvas.Left="446" Canvas.Top="951"
+                  SpeedRatio="2.0"
+                  MouseLeftButtonDown="NextImage_Click"/>
+            <MediaElement x:Name="ButtonPrev"
+                  LoadedBehavior="Manual"
+                  Stretch="Uniform"
+                  Width="92"
+                  Canvas.Left="1335" Canvas.Top="953"
+                  SpeedRatio="2.0"
+                  MouseLeftButtonDown="PrevImage_Click"/>
+        </Canvas>
+        <!-- Описание -->
+        <Canvas x:Name="ImageDesc" Panel.ZIndex="10">
+            <Canvas x:Name="ImageDescBackground" Width="625" Height="1"
+                    Canvas.Left="590" Canvas.Top="970"
+                    Margin="12">
+                <Canvas.Background>
+                    <ImageBrush ImageSource="pack://application:,,,/Sprites/fonDesc.png" />
+                </Canvas.Background>
+            </Canvas>
+            <Image Stretch="UniformToFill" x:Name="ImageDescFrame"
+                   Source="pack://application:,,,/Sprites/ViewerPart1.png"
+                   Width="650" Height="17"
+                   Canvas.Left="590" Canvas.Top="970"/>
+            <TextBox Name="TextBlockDescImage" Width="615" Height="1"
+               Text="PostgreSQL — мощная, бесплатная СУБД с поддержкой ACID, JSON, репликации и расширяемости."
+               TextWrapping="Wrap"
+               FontFamily="{StaticResource CintGost63}"
+               Foreground="White"
+               Padding="10, 13"
+               BorderThickness="0"
+               IsReadOnly="True"
+               Background="Transparent"
+               Canvas.Left="607" Canvas.Top="980"/>
+        </Canvas>
+        <Canvas Panel.ZIndex="5" >
+            <MediaElement x:Name="ImageDescButton"
+                  LoadedBehavior="Manual"
+                  Stretch="Uniform"
+                  Width="180"
+                  Canvas.Left="120" Canvas.Top="805"
+                  SpeedRatio="2"
+                  MouseDown="ImageDescButton_Click"/>
+            <MediaElement x:Name="ImageDescButtonRevers"
+                  LoadedBehavior="Manual"
+                  Stretch="Uniform"
+                  Width="180"
+                  Canvas.Left="120" Canvas.Top="805"
+                  SpeedRatio="2" 
+                  MouseDown="ImageDescButtonRevers_Click"/>
+            <MediaElement x:Name="ButtonZoom"
+                  LoadedBehavior="Manual"
+                  Stretch="Uniform"
+                  Width="160"
+                  Canvas.Left="125" Canvas.Top="540"
+                  SpeedRatio="2" 
+                  MouseDown="ButtonZoom_Click"/>
+            <MediaElement x:Name="ImageShowButton"
+                  LoadedBehavior="Manual"
+                  Stretch="Uniform"
+                  Width="180"
+                  Canvas.Left="139" Canvas.Top="235"
+                  SpeedRatio="2"
+                  MouseDown="ImageShowButton_Click"/>
+            <MediaElement x:Name="ImageShowButtonRevers"
+                  LoadedBehavior="Manual"
+                  Stretch="Uniform"
+                  Width="180"
+                  Canvas.Left="139" Canvas.Top="235"
+                  SpeedRatio="2" 
+                  MouseDown="ImageShowButtonRevers_Click"/>
+        </Canvas>
+        <!-- ScrollViewer с изображениями -->
+        <ScrollViewer Name="scrollViewer"
+                      VerticalScrollBarVisibility="Hidden"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center"
+                      Height="587"
+                      Width="350"
+                      Margin="0, 20, -1558, 0">
+            <ItemsControl Name="SliderContainer"
+                          PreviewMouseDown="SliderContainer_MouseDown"
+                          PreviewMouseUp="SliderContainer_MouseUp">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Vertical"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Width="117" Height="74" Loaded="OnItemLoaded">
+                            <!-- Рамка -->
+                            <Image Source="pack://application:,,,/Sprites/fonDesc.png"
+                                   Width="117" Height="64"
+                                   Stretch="Uniform"/>
+                            <Image Source="pack://application:,,,/Sprites/PhotoFrame.png"
+                                   Width="117" Height="74"
+                                   Stretch="Uniform"/>
+                            <!-- Картинка -->
+                            <Image Source="{Binding Path}" 
+                                   Visibility="{Binding Visibility}"
+                                   Width="97" Height="64"
+                                   Stretch="UniformToFill"
+                                   Opacity="0">
+                                <Image.Style>
+                                    <Style TargetType="Image">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Visibility}" Value="Visible">
+                                                <DataTrigger.EnterActions>
+                                                    <BeginStoryboard>
+                                                        <Storyboard>
+                                                            <DoubleAnimation
+                                                    Storyboard.TargetProperty="Opacity"
+                                                    From="0" To="1"
+                                                    Duration="0:0:0.4"
+                                                    FillBehavior="HoldEnd"/>
+                                                        </Storyboard>
+                                                    </BeginStoryboard>
+                                                </DataTrigger.EnterActions>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+        <Canvas x:Name="TouchCanvas" Width="270" 
+                HorizontalAlignment="Right" Margin="0, 0, 50, 0">
+            <Image x:Name="FrameMiniFoto" Stretch="Uniform"
+                   IsHitTestVisible="False"
+                   Source="pack://application:,,,/Sprites/ViewerPart2.png"
+                   Width="170" Canvas.Top="523.5" Canvas.Left="25"/>
+        </Canvas>
+        <Image x:Name="ButtonClose"
+               Source="pack://application:,,,/Sprites/GearsParts_Button_2.png"
+               Stretch="Uniform" Width="275" Height="80"
+               HorizontalAlignment="Right" VerticalAlignment="Bottom"
+               Margin="0, 0, 45, 110"
+               MouseDown="CloseWindow_Click"/>
+        <Canvas x:Name="BlackBack" Width="1920" Height="1080"
+                Panel.ZIndex="9"
+                Background="Black"
+                Visibility="Hidden"/>
+        <Image x:Name="ImageFullScreen" Visibility="Hidden" Stretch="Uniform" 
+               RenderTransformOrigin="0.5,0.5"
+               IsManipulationEnabled="True"
+               ManipulationDelta="ImageFullScreen_ManipulationDelta"
+               ManipulationStarting="ImageFullScreen_ManipulationStarting"
+               MouseLeftButtonDown="ImageFullScreen_MouseLeftButtonDown"
+               MouseLeftButtonUp="ImageFullScreen_MouseLeftButtonUp"
+               MouseMove="ImageFullScreen_MouseMove"
+               Panel.ZIndex="10"/>
+        <Slider x:Name="ZoomSlider" Panel.ZIndex="11"
+                Style="{StaticResource ZoomSliderStyle}"
+                Minimum="1.0"
+                Maximum="4.0"
+                Value="1.0"
+                Width="1400"
+                VerticalAlignment="Bottom"
+                Margin="0, 0, 0, 50"
+                Height="48"
+                Visibility="Collapsed"
+                ValueChanged="ZoomSlider_ValueChanged"
+                Loaded="ZoomSlider_Loaded"/>
+        <Image Stretch="Uniform" x:Name="CloseZoom" Panel.ZIndex="11"
+               Width="30" Height="30"
+               HorizontalAlignment="Right"
+               VerticalAlignment="Top"
+               Margin="15"
+               Source="pack://application:,,,/Sprites/close.png"
+               Visibility="Hidden"
+               MouseDown="ButtonZoom_Click"/>
+
+        <Image Source="pack://application:,,,/Sprites/NameCategory.png"
+               Width="150"
+               Stretch="Uniform"
+               HorizontalAlignment="Right"
+               VerticalAlignment="Top"
+               Margin="0, 180, 87, 0"/>
+        <Grid VerticalAlignment="Top" HorizontalAlignment="Right"
+              Width="115" Height="40" Margin="0, 187, 105, 0">
+            <TextBlock x:Name="NameCategory" Text="Очень длинное название категории"
+                   FontSize="14" 
+                   TextWrapping="Wrap"
+                   TextAlignment="Center"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   FontFamily="{StaticResource CintGost63}"
+                   Foreground="White"/>
+        </Grid>
+    </Grid>
+</Window>
